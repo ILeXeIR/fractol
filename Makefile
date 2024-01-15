@@ -7,7 +7,7 @@ LIBFT_FULL = $(LIBFT_DIR)/$(LIBFT)
 
 MLX_DIR = MLX42
 
-HEADERS	:= -I ./include -I $(MLX_DIR)/include
+HEADERS	:= -I $(MLX_DIR)/include
 LIBS	:= $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SOURCES = fractol.c

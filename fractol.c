@@ -6,132 +6,78 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 20:38:01 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/12 18:48:19 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/15 20:40:30 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include "MLX42/MLX42.h"
-#define WIDTH 256
-#define HEIGHT 256
+#include "fractol.h"
 
-// Exit the program as failure.
-// static void ft_error(void)
-// {
-// 	fprintf(stderr, "%s", mlx_strerror(mlx_errno));
-// 	exit(EXIT_FAILURE);
-// }
-
-// // Print the window width and height.
-// static void ft_hook(void* param)
-// {
-// 	const mlx_t* mlx = param;
-
-// 	printf("WIDTH: %d | HEIGHT: %d\n", mlx->width, mlx->height);
-// }
-
-// int32_t	main(void)
-// {
-
-// 	// MLX allows you to define its core behaviour before startup.
-// 	mlx_set_setting(MLX_MAXIMIZED, true);
-// 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "42Balls", true);
-// 	if (!mlx)
-// 		ft_error();
-
-// 	/* Do stuff */
-
-// 	// Create and display the image.
-// 	mlx_image_t* img = mlx_new_image(mlx, 256, 256);
-// 	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
-// 		ft_error();
-
-// 	// Even after the image is being displayed, we can still modify the buffer.
-// 	mlx_put_pixel(img, 0, 0, 0xFF0000FF);
-
-// 	// Register a hook and pass mlx as an optional param.
-// 	// NOTE: Do this before calling mlx_loop!
-// 	mlx_loop_hook(mlx, ft_hook, mlx);
-// 	mlx_loop(mlx);
-// 	mlx_terminate(mlx);
-// 	return (EXIT_SUCCESS);
-// }
-
-static mlx_image_t* image;
-
-// -----------------------------------------------------------------------------
-
-int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
+void	clean_and_exit(mlx_t *mlx, int code)
 {
-    return (r << 24 | g << 16 | b << 8 | a);
+	if (code > 1)
+		mlx_close_window(mlx);
+	mlx_terminate(mlx);
+	exit (1);
 }
 
-void ft_randomize(void* param)
+int32_t	get_color(int32_t r, int32_t g, int32_t b, int32_t a)
 {
-	for (uint32_t i = 0; i < image->width; ++i)
+	return (r << 24 | g << 16 | b << 8 | a);
+}
+
+void	fill_image(void	*param)
+{
+	mlx_image_t	*image;
+	uint32_t	x;
+	uint32_t	y;
+	uint32_t	color;
+
+	image = param;
+	y = 0;
+	while (y < image->height)
 	{
-		for (uint32_t y = 0; y < image->height; ++y)
+		x = 0;
+		while (x < image->width)
 		{
-			uint32_t color = ft_pixel(
-				rand() % 0xFF, // R
-				rand() % 0xFF, // G
-				rand() % 0xFF, // B
-				rand() % 0xFF  // A
-			);
-			mlx_put_pixel(image, i, y, color);
+			if (x < 100)
+				color = get_color(0, 255, 0, 255);
+			else
+				color = get_color(100, 0, 100, 100);
+			mlx_put_pixel(image, x, y, color);
+			x++;
 		}
+		y++;
 	}
-	(void)param;
 }
 
-void ft_hook(void* param)
+void	handle_keys(void *param)
 {
-	mlx_t* mlx = param;
+	mlx_t	*mlx;
 
+	mlx = param;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-		image->instances[0].y -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		image->instances[0].y += 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-		image->instances[0].x -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		image->instances[0].x += 5;
+	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
+		ft_printf("W: %d, H: %d\n", mlx->width, mlx->height);
 }
 
-// -----------------------------------------------------------------------------
-
-int32_t main(void)
+int	main(void)
 {
-	mlx_t* mlx;
+	mlx_t		*mlx;
+	mlx_image_t	*image;
 
-	// Gotta error check this stuff
-	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
-	{
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
-	if (!(image = mlx_new_image(mlx, 128, 128)))
-	{
-		mlx_close_window(mlx);
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
+	mlx_set_setting(MLX_MAXIMIZED, true);
+	mlx = mlx_init(WIDTH, HEIGHT, "fract-ol", true);
+	if (mlx == NULL)
+		clean_and_exit(mlx, 1);
+	image = mlx_new_image(mlx, WIDTH, HEIGHT);
+	if (image == NULL)
+		clean_and_exit(mlx, 2);
 	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
-	{
-		mlx_close_window(mlx);
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
-	
-	mlx_loop_hook(mlx, ft_randomize, mlx);
-	mlx_loop_hook(mlx, ft_hook, mlx);
-
+		clean_and_exit(mlx, 3);
+	mlx_loop_hook(mlx, &handle_keys, mlx);
+	mlx_loop_hook(mlx, &fill_image, image);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
-	return (EXIT_SUCCESS);
+	return (0);
 }
