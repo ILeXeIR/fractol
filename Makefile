@@ -5,10 +5,12 @@ LIBFT = libft.a
 LIBFT_DIR = libft
 LIBFT_FULL = $(LIBFT_DIR)/$(LIBFT)
 
+LIBMLX = libmlx42.a
 MLX_DIR = MLX42
+MLX_FULL = $(MLX_DIR)/build/$(LIBMLX)
 
 HEADERS	:= -I $(MLX_DIR)/include
-LIBS	:= $(MLX_DIR)/build/libmlx42.a -ldl -lglfw -pthread -lm
+LIBS	:= $(LIBFT_FULL) $(MLX_FULL) -ldl -lglfw -pthread -lm
 
 SOURCES = fractol.c
 SOURCES_BONUS = fractol.c
@@ -18,24 +20,24 @@ OBJECTS_BONUS = $(SOURCES_BONUS:.c=.o)
 
 CFLAGS += -Wall -Wextra -Werror -Wunreachable-code -Ofast
 
-all: libmlx $(NAME)
-
-libmlx:
-	cmake $(MLX_DIR) -B $(MLX_DIR)/build && make -C $(MLX_DIR)/build -j4
+all: $(NAME)
 
 %.o: %.c
-	cc $(CFLAGS) -c $< -o $@ $(HEADERS) && printf "Compiling: $(notdir $<)"
+	cc $(CFLAGS) -c $< -o $@ $(HEADERS)
 
-$(LIBFT_FULL):
+$(MLX_FULL):
 	make -C $(LIBFT_DIR)
 
-$(NAME): $(OBJECTS) $(LIBFT_FULL)
-	cc $(CFLAGS) -o $(NAME) $(OBJECTS) $(LIBFT_FULL) $(LIBS) $(HEADERS)
+$(LIBFT_FULL):
+	cmake $(MLX_DIR) -B $(MLX_DIR)/build && make -C $(MLX_DIR)/build -j4
 
-$(NAME_BONUS): $(OBJECTS_BONUS) $(LIBFT_FULL)
-	cc $(CFLAGS) -o $(NAME_BONUS) $(OBJECTS_BONUS) $(LIBFT_FULL) $(LIBS) $(HEADERS)
+$(NAME): $(OBJECTS) $(LIBFT_FULL) $(MLX_FULL)
+	cc $(CFLAGS) -o $(NAME) $(OBJECTS) $(LIBS) $(HEADERS)
 
-bonus: libmlx $(NAME_BONUS)
+$(NAME_BONUS): $(OBJECTS_BONUS) $(LIBFT_FULL) $(MLX_FULL)
+	cc $(CFLAGS) -o $(NAME_BONUS) $(OBJECTS_BONUS) $(LIBS) $(HEADERS)
+
+bonus: $(NAME_BONUS)
 
 clean:
 	rm -f $(OBJECTS) $(OBJECTS_BONUS)

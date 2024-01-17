@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 20:38:01 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/16 19:55:58 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/17 19:54:39 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,41 +95,31 @@ int	count_iterations(double x0, double y0)
 	return (iteration);
 }
 
-void	draw_fractal(void	*param)
+void	draw_fractal(void *param)
 {
-	mlx_image_t	*image;
+	t_fractal	*fractal;
 	uint32_t	x;
 	uint32_t	y;
 	uint32_t	iteration;
 	uint32_t	color;
-	double		x_min = -2;
-	double		x_max = 0.47;
-	double		y_min = -1.12;
-	double		y_max = 1.12;
-	double		x_step;
-	double		y_step;
-	double		x0;
-	double		y0;
 
-	image = param;
-	x_step = (x_max - x_min) / image->width;
-	y_step = (y_max - y_min) / image->height;
+	fractal = param;
 	y = 0;
-	y0 = y_min;
-	while (y < image->height)
+	fractal->grid->y0 = fractal->grid->y_min;
+	while (y < fractal->image->height)
 	{
 		x = 0;
-		x0 = x_min;
-		while (x < image->width)
+		fractal->grid->x0 = fractal->grid->x_min;
+		while (x < fractal->image->width)
 		{
-			iteration = count_iterations(x0, y0);
+			iteration = count_iterations(fractal->grid->x0, fractal->grid->y0);
 			color = choose_color(iteration);
-			mlx_put_pixel(image, x, y, color);
+			mlx_put_pixel(fractal->image, x, y, color);
 			x++;
-			x0 += x_step;
+			fractal->grid->x0 += fractal->grid->x_step;
 		}
 		y++;
-		y0 += y_step;
+		fractal->grid->y0 += fractal->grid->y_step;
 	}
 }
 
@@ -147,23 +137,64 @@ void	handle_keys(void *param)
 	}
 }
 
+void	zoom_fractal(t_grid *grid, mlx_image_t *image, int sign)
+{
+	double	x_change;
+	double	y_change;
+
+	x_change = (grid->x_max - grid->x_min) * 0.05;
+	grid->x_min += x_change * sign;
+	grid->x_max -= x_change * sign;
+	y_change = (grid->y_max - grid->y_min) * 0.05;
+	grid->y_min += y_change * sign;
+	grid->y_max -= y_change * sign;
+	grid->x_step = (grid->x_max - grid->x_min) / image->width;
+	grid->y_step = (grid->y_max - grid->y_min) / image->height;
+}
+
+void	handle_zoom(double xdelta, double ydelta, void* param)
+{
+	t_fractal	*fractal;
+
+	fractal = param;
+	if (ydelta > 0)
+		zoom_fractal(fractal->grid, fractal->image, 1);
+	else if (ydelta < 0)
+		zoom_fractal(fractal->grid, fractal->image, -1);
+	(void)xdelta;
+}
+
+void	grid_init(t_grid *grid, mlx_image_t *image)
+{
+	grid->x_min = -2;
+	grid->x_max = 0.47;
+	grid->y_min = -1.12;
+	grid->y_max = 1.12;
+	grid->x_step = (grid->x_max - grid->x_min) / image->width;
+	grid->y_step = (grid->y_max - grid->y_min) / image->height;
+}
+
 int	main(void)
 {
 	mlx_t		*mlx;
-	mlx_image_t	*image;
+	t_grid		grid;
+	t_fractal	fractal;
 
-	mlx_set_setting(MLX_MAXIMIZED, true);
+	// mlx_set_setting(MLX_MAXIMIZED, true);
 	mlx = mlx_init(WIDTH, HEIGHT, "fract-ol", true);
 	if (mlx == NULL)
 		clean_and_exit(mlx, 1);
-	image = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (image == NULL)
+	fractal.image = mlx_new_image(mlx, WIDTH, HEIGHT);
+	fractal.grid = &grid;
+	grid_init(fractal.grid, fractal.image);
+	if (fractal.image == NULL)
 		clean_and_exit(mlx, 2);
-	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
+	if (mlx_image_to_window(mlx, fractal.image, 0, 0) == -1)
 		clean_and_exit(mlx, 3);
 	mlx_loop_hook(mlx, &handle_keys, mlx);
+	mlx_scroll_hook(mlx, &handle_zoom, &fractal);
 	// mlx_loop_hook(mlx, &fill_image, image);
-	mlx_loop_hook(mlx, &draw_fractal, image);
+	mlx_loop_hook(mlx, &draw_fractal, &fractal);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 	return (0);
