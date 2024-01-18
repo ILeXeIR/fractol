@@ -12,8 +12,8 @@ MLX_FULL = $(MLX_DIR)/build/$(LIBMLX)
 HEADERS	:= -I $(MLX_DIR)/include
 LIBS	:= $(LIBFT_FULL) $(MLX_FULL) -ldl -lglfw -pthread -lm
 
-SOURCES = fractol.c
-SOURCES_BONUS = fractol.c
+SOURCES = fractol.c helpers.c hooks.c colors.c
+SOURCES_BONUS = fractol.c helpers.c hooks.c colors.c
 
 OBJECTS = $(SOURCES:.c=.o)
 OBJECTS_BONUS = $(SOURCES_BONUS:.c=.o)
