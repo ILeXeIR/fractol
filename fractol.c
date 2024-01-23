@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 20:38:01 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/18 19:17:14 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/23 20:09:18 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ void	draw_fractal(void *param)
 		while (x < fractal->image->width)
 		{
 			iteration = count_iterations(fractal->grid->x0, fractal->grid->y0);
-			color = choose_color(iteration);
+			color = choose_color(iteration, fractal->color_schema);
+			// if (x == 600 && y == 400)
+			// 	printf("%d, %d\n", iteration, color);
 			mlx_put_pixel(fractal->image, x, y, color);
 			x++;
 			fractal->grid->x0 += fractal->grid->x_step;
@@ -101,7 +103,6 @@ int	main(void)
 	t_grid		grid;
 	t_fractal	fractal;
 
-	// mlx_set_setting(MLX_MAXIMIZED, true);
 	mlx = mlx_init(WIDTH, HEIGHT, "fract-ol", true);
 	if (mlx == NULL)
 		clean_and_exit(mlx, 1);
@@ -112,10 +113,10 @@ int	main(void)
 		clean_and_exit(mlx, 3);
 	fractal.mlx = mlx;
 	fractal.grid = &grid;
+	fractal.color_schema = 1;
 	grid_init(fractal.grid, fractal.image);
-	mlx_loop_hook(mlx, &handle_keys, &fractal);
 	mlx_scroll_hook(mlx, &handle_zoom, &fractal);
-	// mlx_cursor_hook(mlx, &handle_cursor, &fractal);
+	mlx_loop_hook(mlx, &handle_keys, &fractal);
 	// mlx_loop_hook(mlx, &fill_image, image);
 	mlx_loop_hook(mlx, &draw_fractal, &fractal);
 	mlx_loop(mlx);

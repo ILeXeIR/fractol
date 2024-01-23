@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 18:34:59 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/18 18:54:37 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/23 20:15:00 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,17 @@ typedef struct s_fractal
 	mlx_t		*mlx;
 	mlx_image_t	*image;
 	t_grid		*grid;
+	int32_t		color_schema;
 }	t_fractal;
 
 void	handle_keys(void *param);
 void	handle_zoom(double xdelta, double ydelta, void *param);
-void	handle_cursor(double xpos, double ypos, void *param);
 
 void	clean_and_exit(mlx_t *mlx, int code);
+void	move_image(long double *i_min, long double *i_max, int sign);
 int32_t	min(int32_t x, int32_t y);
 int32_t	max(int32_t x, int32_t y);
 
-int32_t	choose_color(uint32_t iteration);
+int32_t	choose_color(uint32_t iteration, int32_t color_schema);
 
 #endif

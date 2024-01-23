@@ -25,10 +25,10 @@ all: $(NAME)
 %.o: %.c
 	cc $(CFLAGS) -c $< -o $@ $(HEADERS)
 
-$(MLX_FULL):
+$(LIBFT_FULL):
 	make -C $(LIBFT_DIR)
 
-$(LIBFT_FULL):
+$(MLX_FULL):
 	cmake $(MLX_DIR) -B $(MLX_DIR)/build && make -C $(MLX_DIR)/build -j4
 
 $(NAME): $(OBJECTS) $(LIBFT_FULL) $(MLX_FULL)
@@ -42,11 +42,11 @@ bonus: $(NAME_BONUS)
 clean:
 	rm -f $(OBJECTS) $(OBJECTS_BONUS)
 	make clean -C $(LIBFT_DIR)
-	rm -rf $(MLX_DIR)/build
 
 fclean: clean
 	rm -f $(NAME) $(NAME_BONUS)
 	make fclean -C $(LIBFT_DIR)
+	rm -rf $(MLX_DIR)/build
 
 re: fclean all
 

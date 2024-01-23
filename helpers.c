@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/18 17:49:36 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/18 17:51:00 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/23 17:12:20 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,13 @@ int32_t	max(int32_t x, int32_t y)
 	if (x < y)
 		return (y);
 	return (x);
+}
+
+void	move_image(long double *i_min, long double *i_max, int sign)
+{
+	long double	i_change;
+
+	i_change = (*i_max - *i_min) * 0.1 * sign;
+	*i_min += i_change;
+	*i_max += i_change;
 }
