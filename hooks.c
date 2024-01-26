@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/18 17:49:31 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/23 19:53:03 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/26 17:29:44 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ void	handle_keys(void *param)
 		mlx_close_window(mlx);
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
-		printf("X: %Le - %Le,\tY: %Le - %Le\n", grid->x_min, grid->x_max, grid->y_min, grid->y_max);
+		printf("X:\nmin: %.64Le\nmax: %.64Le\n", grid->x_min, grid->x_max);
+		printf("Y:\nmin: %.64Le\nmax: %.64Le\n", grid->y_min, grid->y_max);
+		printf("STEP:\nx: %.64Le\n\n", grid->step);
 		// printf("%f\n", mlx->delta_time);
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT) \
@@ -84,8 +86,7 @@ static void	zoom_fractal(t_grid *grid, t_fractal *fractal, int sign)
 	y_change = (grid->y_max - grid->y_min) * 0.05;
 	grid->y_min += y_change * sign;
 	grid->y_max -= y_change * sign;
-	grid->x_step = (grid->x_max - grid->x_min) / image->width;
-	grid->y_step = (grid->y_max - grid->y_min) / image->height;
+	grid->step *= (1 - 0.1 * sign);
 	grid->x_min += x0_pos * 0.1 * sign;
 	grid->x_max += x0_pos * 0.1 * sign;
 	grid->y_min += y0_pos * 0.1 * sign;

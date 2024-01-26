@@ -18,7 +18,7 @@ SOURCES_BONUS = fractol.c helpers.c hooks.c colors.c
 OBJECTS = $(SOURCES:.c=.o)
 OBJECTS_BONUS = $(SOURCES_BONUS:.c=.o)
 
-CFLAGS += -Wall -Wextra -Werror -Wunreachable-code -Ofast
+CFLAGS += -Wall -Wextra -Werror -Ofast
 
 all: $(NAME)
 
