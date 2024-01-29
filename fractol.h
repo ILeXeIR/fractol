@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 18:34:59 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/26 20:37:33 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/29 17:58:02 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <string.h>
+# include <math.h>
 # include "libft/libft.h"
 # include "MLX42/MLX42.h"
 
@@ -41,7 +42,8 @@ typedef struct s_grid
 typedef enum e_set
 {
 	MANDELBROT = 1,
-	JULIA = 2
+	JULIA = 2,
+	BURNING_SHIP = 3
 }	t_set;
 
 typedef struct s_fractal
