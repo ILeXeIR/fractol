@@ -6,18 +6,13 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/18 17:54:07 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/30 18:54:02 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 19:28:00 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static int32_t	get_color(int32_t r, int32_t g, int32_t b, int32_t a)
-{
-	return (r << 24 | g << 16 | b << 8 | a);
-}
-
-static int32_t	palette_1(uint32_t iteration, uint32_t max_iter)
+int32_t	palette_1(uint32_t iteration, uint32_t max_iter)
 {
 	int32_t	r;
 	int32_t	g;
@@ -44,14 +39,14 @@ static int32_t	palette_1(uint32_t iteration, uint32_t max_iter)
 	return (get_color(255, 255, 255, 255));
 }
 
-static int32_t	palette_2(uint32_t iteration, uint32_t max_iter)
+int32_t	palette_2(uint32_t iteration, uint32_t max_iter)
 {
 	if (iteration == max_iter)
 		return (0xFF);
 	return (0xFFFFFF00 + iteration * 255 / max_iter);
 }
 
-static int32_t	palette_3(uint32_t iteration, uint32_t max_iter)
+int32_t	palette_3(uint32_t iteration, uint32_t max_iter)
 {
 	int32_t	r;
 	int32_t	g;
@@ -65,15 +60,4 @@ static int32_t	palette_3(uint32_t iteration, uint32_t max_iter)
 	g = (color >> 8) & 0xFF;
 	a = color & 0xFF;
 	return (get_color(r, g, b, a));
-}
-
-int32_t	choose_color(uint32_t iteration, int32_t palette, uint32_t max_iter)
-{
-	if (palette == 1)
-		return (palette_1(iteration, max_iter));
-	else if (palette == 2)
-		return (palette_2(iteration, max_iter));
-	else if (palette == 3)
-		return (palette_3(iteration, max_iter));
-	return (0);
 }

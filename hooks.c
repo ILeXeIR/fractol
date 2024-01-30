@@ -6,13 +6,13 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/18 17:49:31 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/30 18:56:46 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 19:30:11 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	change_palette(mlx_t *mlx, t_fractal *fractal)
+static void	change_palette(mlx_t *mlx, t_fractal *fractal)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_1))
 		fractal->palette = 1;
@@ -33,13 +33,6 @@ void	handle_keys(void *param)
 	grid = fractal->grid;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
-	{
-		printf("X:\nmin: %.64Le\nmax: %.64Le\n", grid->x_min, grid->x_max);
-		printf("Y:\nmin: %.64Le\nmax: %.64Le\n", grid->y_min, grid->y_max);
-		printf("STEP:\nx: %.64Le\n\n", grid->step);
-		// printf("%f\n", mlx->delta_time);
-	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT) \
 			&& !mlx_is_key_down(mlx, MLX_KEY_RIGHT))
 		move_image(&grid->x_min, &grid->x_max, -1);
@@ -98,7 +91,6 @@ void	handle_zoom(double xdelta, double ydelta, void *param)
 	t_fractal	*fractal;
 
 	fractal = param;
-	// printf("POS: %d, %d\n", x_pos, y_pos);
 	if (ydelta > 0)
 		zoom_fractal(fractal->grid, fractal, 1);
 	else if (ydelta < 0)

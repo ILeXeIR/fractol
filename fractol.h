@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 18:34:59 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/30 18:55:00 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 19:36:58 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,25 @@ typedef struct s_fractal
 	int32_t		palette;
 }	t_fractal;
 
-void	handle_keys(void *param);
-void	handle_zoom(double xdelta, double ydelta, void *param);
+void		handle_keys(void *param);
+void		handle_zoom(double xdelta, double ydelta, void *param);
 
-void	clean_and_exit(mlx_t *mlx, int code);
-void	move_image(long double *i_min, long double *i_max, int sign);
-int32_t	min(int32_t x, int32_t y);
-int32_t	max(int32_t x, int32_t y);
-double	get_double(char *s);
+uint32_t	get_iterations(t_fractal *f);
 
-int32_t	choose_color(uint32_t iteration, int32_t palette, uint32_t max_iter);
+int32_t		palette_1(uint32_t iteration, uint32_t max_iter);
+int32_t		palette_2(uint32_t iteration, uint32_t max_iter);
+int32_t		palette_3(uint32_t iteration, uint32_t max_iter);
+
+void		clean_and_exit(mlx_t *mlx, int code);
+int			parse_iterations(char *s);
+t_set		get_fractal_type(char *s);
+void		move_image(long double *i_min, long double *i_max, int sign);
+int32_t		choose_color(uint32_t iter, int32_t palette, uint32_t max_iter);
+
+int32_t		get_color(int32_t r, int32_t g, int32_t b, int32_t a);
+int32_t		min(int32_t x, int32_t y);
+int32_t		max(int32_t x, int32_t y);
+double		get_double(char *s);
+double		get_escape_radius(double cx, double cy);
 
 #endif
