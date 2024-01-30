@@ -6,20 +6,20 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/18 17:49:31 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/26 17:29:44 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 18:56:46 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	change_color_schema(mlx_t *mlx, t_fractal *fractal)
+void	change_palette(mlx_t *mlx, t_fractal *fractal)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_1))
-		fractal->color_schema = 1;
+		fractal->palette = 1;
 	else if (mlx_is_key_down(mlx, MLX_KEY_2))
-		fractal->color_schema = 2;
+		fractal->palette = 2;
 	else if (mlx_is_key_down(mlx, MLX_KEY_3))
-		fractal->color_schema = 3;
+		fractal->palette = 3;
 }
 
 void	handle_keys(void *param)
@@ -52,7 +52,7 @@ void	handle_keys(void *param)
 	else if (mlx_is_key_down(mlx, MLX_KEY_DOWN) \
 			&& !mlx_is_key_down(mlx, MLX_KEY_UP))
 		move_image(&grid->y_min, &grid->y_max, 1);
-	change_color_schema(mlx, fractal);
+	change_palette(mlx, fractal);
 }
 
 static void	get_cursor_coordinates(long double *x0_pos, long double *y0_pos, \

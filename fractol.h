@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 18:34:59 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/29 17:58:02 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 18:55:00 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 // # define HEIGHT 1983
 # define WIDTH 1200
 # define HEIGHT 800
-# define MAX_ITERATIONS 100
 
 typedef struct s_grid
 {
@@ -37,6 +36,8 @@ typedef struct s_grid
 	long double	y0;
 	double		cx;
 	double		cy;
+	double		escape;
+	uint32_t	max_iter;
 }	t_grid;
 
 typedef enum e_set
@@ -52,8 +53,7 @@ typedef struct s_fractal
 	mlx_image_t	*image;
 	t_grid		*grid;
 	t_set		set;
-	int32_t		color_schema;
-	uint32_t	max_iter;
+	int32_t		palette;
 }	t_fractal;
 
 void	handle_keys(void *param);
@@ -65,6 +65,6 @@ int32_t	min(int32_t x, int32_t y);
 int32_t	max(int32_t x, int32_t y);
 double	get_double(char *s);
 
-int32_t	choose_color(uint32_t iteration, int32_t color_schema, uint32_t max_iter);
+int32_t	choose_color(uint32_t iteration, int32_t palette, uint32_t max_iter);
 
 #endif

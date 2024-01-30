@@ -6,13 +6,13 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 20:38:01 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/29 18:14:44 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 18:58:05 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int	count_iterations_m(double x0, double y0, uint32_t max_iter)
+uint32_t	count_iterations_m(double x0, double y0, uint32_t max_iter)
 {
 	long double	x;
 	long double	y;
@@ -32,7 +32,7 @@ int	count_iterations_m(double x0, double y0, uint32_t max_iter)
 	return (iteration);
 }
 
-int	count_iterations_b(double x0, double y0, uint32_t max_iter)
+uint32_t	count_iterations_b(double x0, double y0, uint32_t max_iter)
 {
 	long double	x;
 	long double	y;
@@ -52,33 +52,33 @@ int	count_iterations_b(double x0, double y0, uint32_t max_iter)
 	return (iteration);
 }
 
-int	count_iterations_j(double x, double y, double cx, double cy, uint32_t max_iter)
+uint32_t	count_iterations_j(double x, double y, t_grid *grid)
 {
 	long double	xtemp;
 	uint32_t	iteration;
 
 	iteration = 0;
-	while (x * x + y * y <= 4 && iteration < max_iter)
+	while (x * x + y * y <= grid->escape && iteration < grid->max_iter)
 	{
-		xtemp = x * x - y * y + cx;
-		y = 2 * x * y + cy;
+		xtemp = x * x - y * y + grid->cx;
+		y = 2 * x * y + grid->cy;
 		x = xtemp;
 		iteration++;
 	}
 	return (iteration);
 }
 
-int	get_iterations(t_fractal *f)
+uint32_t	get_iterations(t_fractal *f)
 {
 	t_grid	*grid;
 
 	grid = f->grid;
 	if (f->set == MANDELBROT)
-		return (count_iterations_m(grid->x0, grid->y0, f->max_iter));
+		return (count_iterations_m(grid->x0, grid->y0, grid->max_iter));
 	else if (f->set == BURNING_SHIP)
-		return (count_iterations_b(grid->x0, grid->y0, f->max_iter));
+		return (count_iterations_b(grid->x0, grid->y0, grid->max_iter));
 	else if (f->set == JULIA)
-		return (count_iterations_j(grid->x0, grid->y0, grid->cx, grid->cy, f->max_iter));
+		return (count_iterations_j(grid->x0, grid->y0, grid));
 	return (0);
 }
 
@@ -100,7 +100,7 @@ void	draw_fractal(void *param)
 		while (x < f->image->width)
 		{
 			iteration = get_iterations(f);
-			color = choose_color(iteration, f->color_schema, f->max_iter);
+			color = choose_color(iteration, f->palette, f->grid->max_iter);
 			mlx_put_pixel(f->image, x, y, color);
 			x++;
 			f->grid->x0 += f->grid->step;
@@ -110,33 +110,37 @@ void	draw_fractal(void *param)
 	}
 }
 
-void	grid_init_m(t_grid *grid, mlx_image_t *image)
+double	get_escape_radius(double cx, double cy)
 {
-	grid->y_min = -1.25;
-	grid->y_max = 1.25;
-	grid->x_min = grid->y_min * image->width / image->height - 1;
-	grid->x_max = grid->y_max * image->width / image->height - 1;
-	grid->step = (grid->y_max - grid->y_min) / image->height;
+	double	discriminant;
+	double	radius;
+
+	discriminant = 1 + 4 * sqrt(cx * cx + cy * cy);
+	radius = (1 + sqrt(discriminant)) / 2;
+	return (radius);
 }
 
-void	grid_init_j(t_grid *grid, mlx_image_t *image)
+void	grid_init(t_fractal *fractal, double cx, double cy, uint32_t max_iter)
 {
-	double	r;
+	t_grid		*grid;
+	mlx_image_t	*image;
+	double		r;
 
-	r = 2;
+	grid = fractal->grid;
+	image = fractal->image;
+	if (fractal->set == JULIA)
+		r = get_escape_radius(cx, cy);
+	else
+		r = 2.0;
+	grid->cx = cx;
+	grid->cy = cy;
 	grid->y_min = -r;
 	grid->y_max = r;
 	grid->x_min = grid->y_min * image->width / image->height;
 	grid->x_max = grid->y_max * image->width / image->height;
 	grid->step = (grid->y_max - grid->y_min) / image->height;
-}
-
-void	grid_init(t_fractal *fractal)
-{
-	if (fractal->set == JULIA)
-		grid_init_j(fractal->grid, fractal->image);
-	else
-		grid_init_m(fractal->grid, fractal->image);
+	grid->escape = r * r;
+	grid->max_iter = max_iter;
 }
 
 void	fract_ol(t_set name, double cx, double cy, uint32_t max_iter)
@@ -153,14 +157,11 @@ void	fract_ol(t_set name, double cx, double cy, uint32_t max_iter)
 		clean_and_exit(mlx, 4);
 	if (mlx_image_to_window(mlx, fractal.image, 0, 0) == -1)
 		clean_and_exit(mlx, 5);
-	grid.cx = cx;
-	grid.cy = cy;
 	fractal.mlx = mlx;
 	fractal.grid = &grid;
-	fractal.color_schema = 1;
+	fractal.palette = 1;
 	fractal.set = name;
-	fractal.max_iter = max_iter;
-	grid_init(&fractal);
+	grid_init(&fractal, cx, cy, max_iter);
 	mlx_scroll_hook(mlx, &handle_zoom, &fractal);
 	mlx_loop_hook(mlx, &handle_keys, &fractal);
 	mlx_loop_hook(mlx, &draw_fractal, &fractal);
@@ -178,37 +179,40 @@ int	parse_iterations(char *s)
 	return (num);
 }
 
+t_set	get_fractal_type(char *s)
+{
+	if (ft_strncmp(s, "m", 2) == 0)
+		return (MANDELBROT);
+	else if (ft_strncmp(s, "j", 2) == 0)
+		return (JULIA);
+	else if (ft_strncmp(s, "b", 2) == 0)
+		return (BURNING_SHIP);
+	clean_and_exit(NULL, 1);
+	exit(1);
+}
+
 int	main(int argc, char *argv[])
 {
 	double	cx;
 	double	cy;
 	int		max_iter;
+	t_set	set;
 
 	max_iter = 100;
 	cx = -0.8;
 	cy = 0.156;
-	if (argc > 1 && argc < 4 && (ft_strncmp(argv[1], "m", 2) == 0
-			|| ft_strncmp(argv[1], "b", 2) == 0))
-	{
-		if (argc == 3)
-			max_iter = parse_iterations(argv[2]);
-		if (ft_strncmp(argv[1], "m", 2) == 0)
-			fract_ol(MANDELBROT, 0, 0, max_iter);
-		else
-			fract_ol(BURNING_SHIP, 0, 0, max_iter);
-	}
-	else if (argc > 1 && argc < 6 && ft_strncmp(argv[1], "j", 2) == 0)
-	{
-		if (argc == 3 || argc == 5)
-			max_iter = parse_iterations(argv[argc - 1]);
-		if (argc > 3)
-		{
-			cx = get_double(argv[2]);
-			cy = get_double(argv[3]);
-		}
-		fract_ol(JULIA, cx, cy, max_iter);
-	}
-	else
+	if (argc < 2 || argc > 5)
 		clean_and_exit(NULL, 1);
+	set = get_fractal_type(argv[1]);
+	if (argc == 3 || argc == 5)
+		max_iter = parse_iterations(argv[argc - 1]);
+	if (argc > 3)
+	{
+		if (set != JULIA)
+			clean_and_exit(NULL, 1);
+		cx = get_double(argv[2]);
+		cy = get_double(argv[3]);
+	}
+	fract_ol(set, cx, cy, max_iter);
 	return (0);
 }
