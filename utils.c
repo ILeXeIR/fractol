@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/30 19:16:11 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/30 19:33:25 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 20:25:06 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,9 @@ int32_t	choose_color(uint32_t iter, int32_t palette, uint32_t max_iter)
 		return (palette_2(iter, max_iter));
 	else if (palette == 3)
 		return (palette_3(iter, max_iter));
+	else if (palette == 4)
+		return (palette_4(iter));
+	else if (palette == 5)
+		return (palette_5(iter, max_iter));
 	return (0);
 }

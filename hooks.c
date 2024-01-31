@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/18 17:49:31 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/30 19:30:11 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/30 20:25:24 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ static void	change_palette(mlx_t *mlx, t_fractal *fractal)
 		fractal->palette = 2;
 	else if (mlx_is_key_down(mlx, MLX_KEY_3))
 		fractal->palette = 3;
+	else if (mlx_is_key_down(mlx, MLX_KEY_4))
+		fractal->palette = 4;
+	else if (mlx_is_key_down(mlx, MLX_KEY_5))
+		fractal->palette = 5;
 }
 
 void	handle_keys(void *param)

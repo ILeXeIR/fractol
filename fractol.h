@@ -6,7 +6,7 @@
 /*   By: alpetukh <alpetukh@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/15 18:34:59 by alpetukh      #+#    #+#                 */
-/*   Updated: 2024/01/30 19:36:58 by alpetukh      ########   odam.nl         */
+/*   Updated: 2024/01/31 19:07:17 by alpetukh      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ uint32_t	get_iterations(t_fractal *f);
 int32_t		palette_1(uint32_t iteration, uint32_t max_iter);
 int32_t		palette_2(uint32_t iteration, uint32_t max_iter);
 int32_t		palette_3(uint32_t iteration, uint32_t max_iter);
+int32_t		palette_4(uint32_t iteration);
+int32_t		palette_5(uint32_t iteration, uint32_t max_iter);
 
 void		clean_and_exit(mlx_t *mlx, int code);
 int			parse_iterations(char *s);
