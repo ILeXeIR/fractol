@@ -14,6 +14,15 @@ The program renders several fractal sets in real time and allows you to navigate
 - **Parameter control**  
 - **Stable, responsive rendering** with per-pixel calculations  
 
+
+---
+
+## 📸 Preview
+
+![Demo preview](docs/media/demo.gif)
+
+![Screenshot](docs/screenshots/screenshot1.png)
+
 ---
 
 ## 📚 About the Project
@@ -87,7 +96,3 @@ Keyboard
 - ⬅️ ➡️ ⬆️ ⬇️ → Move around
 - 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ → Switch color palette, five options
 - ESC → Quit
-
----
-
-## 📸 Preview
