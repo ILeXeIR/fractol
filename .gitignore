@@ -1,0 +1,9 @@
+!.gitignore
+fractol
+.vscode/
+*.out
+*.a
+*.o
+temp/
+obj/
+fractol
