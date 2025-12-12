@@ -20,8 +20,6 @@
 # include "libft/libft.h"
 # include "MLX42/MLX42.h"
 
-// # define WIDTH 3840
-// # define HEIGHT 1983
 # define WIDTH 1200
 # define HEIGHT 800
 
