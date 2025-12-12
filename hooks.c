@@ -73,10 +73,8 @@ static void	zoom_fractal(t_grid *grid, t_fractal *fractal, int sign)
 	long double	y_change;
 	long double	x0_pos;
 	long double	y0_pos;
-	mlx_image_t	*image;
 
 	get_cursor_coordinates(&x0_pos, &y0_pos, fractal);
-	image = fractal->image;
 	x_change = (grid->x_max - grid->x_min) * 0.05;
 	grid->x_min += x_change * sign;
 	grid->x_max -= x_change * sign;
