@@ -6,4 +6,5 @@ fractol
 *.o
 temp/
 obj/
+build/
 fractol

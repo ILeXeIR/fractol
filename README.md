@@ -54,16 +54,19 @@ make
 
 **4.** Run
 ```
-./fractol <fractal_type> [parameters]
+./fractol [SET] [CX] [CY] [MAX_ITER]
 ```
 
-Available fractal types:
+[SET] - Available fractal types:
 - `m` - Mandelbrot
 - `j` - Julia
 - `b` - BurningShip
 
-Parameters are two numbers. They are optional and work only with Julia set.  
-Julia fractals take two parameters (real and imaginary values) that define the complex constant used to generate the shape of the fractal.
+Other parameters are optional.
+
+[CX] [CY] - are two numbers for Julia set. Julia fractals take two parameters (real and imaginary values) that define the complex constant used to generate the shape of the fractal.
+
+[MAX_ITER] - a number from 1 to 1000. Maximum iterations to calculate a color of each pixel.
 
 Examples
 ```
